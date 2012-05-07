@@ -1,0 +1,4 @@
+_fb_channel:
+    pattern: /channel.html
+    defaults:
+        _controller: FzaFacebookCanvasAppBundle:Channel:channel
