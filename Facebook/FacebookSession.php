@@ -16,6 +16,10 @@ class FacebookSession
         $this->storage = $storage;
     }
 
+    /**
+     * First look up if we have a session which is connected to this access token.
+     * If there is none, we create a new session.
+     */
     public function startWithAccessToken( $accessToken )
     {
         if( false === $this->storage->loadByAccessToken( $accessToken ) )
@@ -26,6 +30,9 @@ class FacebookSession
         $this->started = true;
     }
 
+    /**
+     * Load an existing session by its id.
+     */
     public function startWithSessionId( $sessionId )
     {
         $this->storage->loadBySessionId( $sessionId );

@@ -4,7 +4,7 @@ namespace Fza\FacebookCanvasAppBundle\Facebook;
 
 class FacebookSessionPersistence extends \BaseFacebook
 {
-    const PREFIX = '_fza_facebookapp';
+    const PREFIX = '_fza';
 
     private $session;
     private $prefix;
@@ -37,14 +37,7 @@ class FacebookSessionPersistence extends \BaseFacebook
             return $default;
         }
 
-        $sessionVariableName = $this->constructSessionVariableName( $key );
-        if( $this->facebookSession->has( $sessionVariableName ) )
-        {
-            return $this->facebookSession->get( $sessionVariableName );
-        }
-
-        return $default;
-
+        return $this->facebookSession->get( $sessionVariableName, $default );
     }
 
     protected function clearPersistentData( $key )

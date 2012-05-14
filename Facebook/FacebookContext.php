@@ -13,8 +13,6 @@ class FacebookContext
     protected $config = array();
 
     protected $isSignedRequest = false;
-    protected $pageData = null;
-
     protected $initialized = false;
 
     public function __construct( FacebookSession $facebookSession, \BaseFacebook $facebookBase, array $config )
@@ -36,19 +34,26 @@ class FacebookContext
         }
 
         // First check if the Facebook SDK has something for us.
-        if( $signedRequest = $this->facebookBase->getSignedRequest() )
+        if( null !== ( $signedRequest = $this->facebookBase->getSignedRequest() ) )
         {
             $this->isSignedRequest = true;
-            $this->pageData = isset( $signedRequest['page'] ) ? $signedRequest['page'] : null;
 
             $this->facebookSession->startWithAccessToken( $this->facebookBase->getAccessToken() );
 
-            try
+            if( array_key_exists( 'page', $signedRequest ) )
             {
-                $this->readUserProfile();
+                $this->facebookSession->set( 'page_data', $signedRequest['page'] );
             }
-            catch( \Exception $e )
-            {}
+
+            if( $this->config['retrieve_user_profile'] )
+            {
+                try
+                {
+                    $this->retrieveUserProfile();
+                }
+                catch( \Exception $e )
+                {}
+            }
         }
 
         // Then check eventually provided request parameters. Our last chance is to look at the session cookie, but that will only work
@@ -62,19 +67,16 @@ class FacebookContext
 
             if( true === $this->facebookSession->isStarted() )
             {
-                $this->facebookBase->setAccessToken( $this->facebookSession->getAccessToken() );
+                // TODO: It could be that the stored access token is not valid anymore!
+                //   -> either fire an api call
+                //      or make sure that the access token will _never_ invalidate
 
-                // We need to check if the derived access token is still valid
-                try
-                {
-                    $this->readUserProfile();
-                }
-                catch( \FacebookApiException $e )
-                {
-                    $this->facebookSession->invalidate();
-                }
+                $this->facebookBase->setAccessToken( $this->facebookSession->getAccessToken() );
             }
         }
+
+        // Look up the page data
+
 
         // Initialized does not mean that this is a valid access to our app, but but it means that we did everything
         // to authenticate the user or at least to get the current facebook session.
@@ -103,7 +105,15 @@ class FacebookContext
             $this->initialize();
         }
 
-        return null !== $this->pageData && array_key_exists( 'liked', $this->pageData ) ? $this->pageData['liked'] : null;
+        if( null !== ( $pageData = $this->facebookSession->get( 'page_data' ) ) )
+        {
+            if( array_key_exists( 'liked', $pageData ) )
+            {
+                return $pageData['liked'];
+            }
+        }
+
+        return null;
     }
 
     public function getAppId()
@@ -152,8 +162,8 @@ class FacebookContext
     }
 
     /**
-     * Upon successfull page request the current facebook user entity
-     * can be derived through the "facebook.user" service.
+     * Retrieve the user id. Note that the Facebook SDK automatically stores the user id
+     * in the session and does not need to fire an api call.
      */
     public function getUserId()
     {
@@ -179,18 +189,13 @@ class FacebookContext
     }
 
     /**
-     * Read the user profile
+     * Retrieve the user profile
      */
-    public function readUserProfile()
+    public function retrieveUserProfile()
     {
-        // Only call the Facebook Graph if we haven't done so before while this session is active
-        if( $this->facebookSession->isStarted() && null === $this->facebookSession->get( 'profile' ) )
+        if( $this->facebookSession->isStarted() && ( null === $this->facebookSession->get( 'profile' ) || false === $this->config['cache_user_profile'] ) )
         {
-            $profileData = $this->facebookBase->api( '/me' );
-
-            $this->facebookSession->set( 'profile', $profileData );
-            $this->facebookSession->set( 'locale', strtolower( substr( $profileData['locale'], 0, strpos( $profileData['locale'], '_' ) ) ) );
-            $this->facebookSession->set( 'firstname', $profileData['first_name'] );
+            $this->facebookSession->set( 'user_profile', $this->facebookBase->api( '/me' ) );
         }
     }
 }

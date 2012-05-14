@@ -23,13 +23,15 @@ class FzaFacebookCanvasAppExtension extends Extension
         {
             $this->{'add' . ucfirst( $method ) . 'Service'}( $config, $container );
         }
+
+        $container->setParameter( 'fza_facebook.facebookbase.file', $config['facebook_sdk_base_file'] );
     }
 
     private function addListenerService( array $config, ContainerBuilder $container )
     {
-        $listenerService = $container->findDefinition( 'fza_facebook_canvas_app.listener' );
+        $listenerService = $container->findDefinition( 'fza_facebook.listener' );
         $listenerService->replaceArgument( 2, $config['facebook_user_entity_namespace'] );
-        $container->setAlias( 'fza_facebook_canvas_app.facebook_user.doctrine.entity_manager', 'doctrine.orm.' . $config['facebook_user_entity_manager'] . '_entity_manager' );
+        $container->setAlias( 'fza_facebook.facebook_user.doctrine.entity_manager', 'doctrine.orm.' . $config['facebook_user_entity_manager'] . '_entity_manager' );
     }
 
     private function addContextService( array $config, ContainerBuilder $container )
@@ -43,8 +45,11 @@ class FzaFacebookCanvasAppExtension extends Extension
             'session_request_key'   => $config['session_request_key'],
             'session_query_key'     => $config['session_query_key'],
             'session_parameter_key' => $config['session_parameter_key'],
+
+            'retrieve_user_proile'  => $config['retrieve_user_profile'],
+            'cache_user_profile'    => $config['cache_user_profile'],
         );
-        $contextService = $container->findDefinition( 'fza_facebook_canvas_app.context' );
+        $contextService = $container->findDefinition( 'fza_facebook.context' );
         $contextService->replaceArgument( 2, $contextConfig );
     }
 
@@ -54,7 +59,7 @@ class FzaFacebookCanvasAppExtension extends Extension
             'appId'  => $config['app_id'],
             'secret' => $config['api_secret']
         );
-        $apiService = $container->findDefinition( 'fza_facebook_canvas_app.api' );
+        $apiService = $container->findDefinition( 'fza_facebook.api' );
         $apiService->replaceArgument( 0, $apiConfig );
         $apiService->replaceArgument( 2, $config['persistence_prefix'] );
     }
@@ -65,7 +70,7 @@ class FzaFacebookCanvasAppExtension extends Extension
         {
             foreach( $chain as $checkKey => $check )
             {
-                $handlerService = $container->findDefinition( 'fza_facebook_canvas_app.check.handler.' . $check );
+                $handlerService = $container->findDefinition( 'fza_facebook.check.handler.' . $check );
 
                 switch( $check )
                 {
@@ -93,11 +98,11 @@ class FzaFacebookCanvasAppExtension extends Extension
                         break;
                 }
 
-                $config['checks'][$chainKey][$checkKey] = 'fza_facebook_canvas_app.check.handler.' . $check;
+                $config['checks'][$chainKey][$checkKey] = 'fza_facebook.check.handler.' . $check;
             }
         }
 
-        $chainHandlerService = $container->findDefinition( 'fza_facebook_canvas_app.check.chainhandler' );
+        $chainHandlerService = $container->findDefinition( 'fza_facebook.check.chainhandler' );
         $chainHandlerService->replaceArgument( 0, $config['checks'] );
     }
 
@@ -106,18 +111,23 @@ class FzaFacebookCanvasAppExtension extends Extension
         $sessionLifetime = (int) $config['session_lifetime'];
         $sessionLifetime = $sessionLifetime <= 60 ? 3600 : $sessionLifetime;
 
-        if( $config['storage'] == 'fza_facebook_canvas_app.session.storage.doctrine' )
+        if( $config['storage'] == 'fza_facebook.session.storage.doctrine' )
         {
             $gcProbability = (float) $config['doctrine_storage_gc_probability'];
             $gcProbability = $gcProbability >= 0 && $gcProbability <= 1 ? $gcProbability : 0.2;
 
-            $doctrineStorageService = $container->findDefinition( 'fza_facebook_canvas_app.session.storage.doctrine' );
+            $doctrineStorageService = $container->findDefinition( 'fza_facebook.session.storage.doctrine' );
             $doctrineStorageService->replaceArgument( 1, $gcProbability );
             $doctrineStorageService->replaceArgument( 2, $sessionLifetime );
 
-            $container->setAlias( 'fza_facebook_canvas_app.session.storage.doctrine.entity_manager', 'doctrine.orm.' . $config['doctrine_storage_entity_manager'] . '_entity_manager' );
+            $container->setAlias( 'fza_facebook.session.storage.doctrine.entity_manager', 'doctrine.orm.' . $config['doctrine_storage_entity_manager'] . '_entity_manager' );
         }
 
-        $container->setAlias( 'fza_facebook_canvas_app.session.storage', $config['storage'] );
+        $container->setAlias( 'fza_facebook.session.storage', $config['storage'] );
+    }
+
+    public function getAlias()
+    {
+        return 'fza_fb_canvas';
     }
 }

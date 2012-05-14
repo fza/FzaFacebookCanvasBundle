@@ -10,7 +10,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root( 'fza_facebook_canvas_app' );
+        $rootNode = $treeBuilder->root( 'fza_fb_canvas' );
 
         $rootNode
             ->addDefaultsIfNotSet()
@@ -31,13 +31,18 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode( 'authentication_redirect_path' )->defaultValue( '/' )->end()
                 ->scalarNode( 'showdown_date' )->end()
 
-                ->scalarNode( 'persistence_prefix' )->defaultValue( '_fza_facebookapp' )->end()
-                ->scalarNode( 'storage' )->defaultValue( 'fza_facebookapp.session.storage.filesystem' )->end()
+                ->scalarNode( 'persistence_prefix' )->defaultValue( '_fza_facebook' )->end()
+                ->scalarNode( 'session_storage' )->defaultValue( 'fza_facebook.session.storage.filesystem' )->end()
                 ->scalarNode( 'doctrine_storage_entity_manager' )->defaultValue( 'default' )->end()
                 ->scalarNode( 'doctrine_storage_gc_probability' )->defaultValue( '0.2' )->end()
 
+                ->booleanNode( 'retrieve_user_profile' )->defaultValue( true )->end()
+                ->booleanNode( 'cache_user_profile' )->defaultValue( true )->end()
+
                 ->scalarNode( 'facebook_user_entity_manager' )->defaultValue( 'default' )->end()
                 ->scalarNode( 'facebook_user_entity_namespace' )->isRequired()->cannotBeEmpty()->end()
+
+                ->scalarNode( 'facebook_sdk_base_file' )->defaultValue( '%kernel.root_dir%/../vendor/facebook/src/base_facebook.php' )->end()
 
                 ->arrayNode( 'permissions' )
                     ->addDefaultsIfNotSet()

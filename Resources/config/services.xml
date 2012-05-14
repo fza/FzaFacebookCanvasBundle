@@ -5,62 +5,62 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="fza_facebook_canvas_app.listener.class">Fza\FacebookCanvasAppBundle\EventListener\FacebookListener</parameter>
-        <parameter key="fza_facebook_canvas_app.context.class">Fza\FacebookCanvasAppBundle\Facebook\FacebookContext</parameter>
-        <parameter key="fza_facebook_canvas_app.api.class">Fza\FacebookCanvasAppBundle\Facebook\FacebookSessionPersistence</parameter>
-        <parameter key="fza_facebook_canvas_app.session.class">Fza\FacebookCanvasAppBundle\Facebook\FacebookSession</parameter>
-        <parameter key="fza_facebook_canvas_app.session.storage.filesystem.class">Fza\FacebookCanvasAppBundle\Facebook\SessionStorage\FilesystemSessionStorage</parameter>
-        <parameter key="fza_facebook_canvas_app.session.storage.doctrine.class">Fza\FacebookCanvasAppBundle\Facebook\SessionStorage\DoctrineSessionStorage</parameter>
+        <parameter key="fza_facebook.listener.class">Fza\FacebookCanvasAppBundle\EventListener\FacebookListener</parameter>
+        <parameter key="fza_facebook.context.class">Fza\FacebookCanvasAppBundle\Facebook\FacebookContext</parameter>
+        <parameter key="fza_facebook.api.class">Fza\FacebookCanvasAppBundle\Facebook\FacebookSessionPersistence</parameter>
+        <parameter key="fza_facebook.session.class">Fza\FacebookCanvasAppBundle\Facebook\FacebookSession</parameter>
+        <parameter key="fza_facebook.session.storage.filesystem.class">Fza\FacebookCanvasAppBundle\Facebook\SessionStorage\FilesystemSessionStorage</parameter>
+        <parameter key="fza_facebook.session.storage.doctrine.class">Fza\FacebookCanvasAppBundle\Facebook\SessionStorage\DoctrineSessionStorage</parameter>
 
-        <parameter key="fza_facebook_canvas_app.check.chainhandler.class">Fza\FacebookCanvasAppBundle\Check\FacebookCheckChainHandler</parameter>
-        <parameter key="fza_facebook_canvas_app.check.handler.abstract.class">Fza\FacebookCanvasAppBundle\Check\Handler\AbstractHandler</parameter>
-        <parameter key="fza_facebook_canvas_app.check.handler.facebook_error.class">Fza\FacebookCanvasAppBundle\Check\Handler\FacebookErrorHandler</parameter>
-        <parameter key="fza_facebook_canvas_app.check.handler.no_signed_request.class">Fza\FacebookCanvasAppBundle\Check\Handler\NoSignedRequestHandler</parameter>
-        <parameter key="fza_facebook_canvas_app.check.handler.not_authenticated.class">Fza\FacebookCanvasAppBundle\Check\Handler\NotAuthenticatedHandler</parameter>
-        <parameter key="fza_facebook_canvas_app.check.handler.page_not_liked.class">Fza\FacebookCanvasAppBundle\Check\Handler\PageNotLikedHandler</parameter>
-        <parameter key="fza_facebook_canvas_app.check.handler.showdown_date_passed.class">Fza\FacebookCanvasAppBundle\Check\Handler\ShowdownDatePassedHandler</parameter>
+        <parameter key="fza_facebook.check.chainhandler.class">Fza\FacebookCanvasAppBundle\Check\FacebookCheckChainHandler</parameter>
+        <parameter key="fza_facebook.check.handler.abstract.class">Fza\FacebookCanvasAppBundle\Check\Handler\AbstractHandler</parameter>
+        <parameter key="fza_facebook.check.handler.facebook_error.class">Fza\FacebookCanvasAppBundle\Check\Handler\FacebookErrorHandler</parameter>
+        <parameter key="fza_facebook.check.handler.no_signed_request.class">Fza\FacebookCanvasAppBundle\Check\Handler\NoSignedRequestHandler</parameter>
+        <parameter key="fza_facebook.check.handler.not_authenticated.class">Fza\FacebookCanvasAppBundle\Check\Handler\NotAuthenticatedHandler</parameter>
+        <parameter key="fza_facebook.check.handler.page_not_liked.class">Fza\FacebookCanvasAppBundle\Check\Handler\PageNotLikedHandler</parameter>
+        <parameter key="fza_facebook.check.handler.showdown_date_passed.class">Fza\FacebookCanvasAppBundle\Check\Handler\ShowdownDatePassedHandler</parameter>
 
-        <parameter key="twig.extension.fza_facebook_canvas_app.class">Fza\FacebookCanvasAppBundle\Twig\Extension\FzaFacebookCanvasAppExtension</parameter>
+        <parameter key="twig.extension.fza_facebook.class">Fza\FacebookCanvasAppBundle\Twig\Extension\FzaFacebookCanvasAppExtension</parameter>
     </parameters>
 
     <services>
-        <service id="fza_facebook_canvas_app.listener" class="%fza_facebook_canvas_app.listener.class%">
+        <service id="fza_facebook.listener" class="%fza_facebook.listener.class%">
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="-128" />
             <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse" />
             <argument type="service" id="service_container" />
-            <argument type="service" id="fza_facebook_canvas_app.facebook_user.doctrine.entity_manager" />
+            <argument type="service" id="fza_facebook.facebook_user.doctrine.entity_manager" />
             <argument></argument> <!-- facebook user entity namespace -->
         </service>
 
-        <service id="fza_facebook_canvas_app.context" class="%fza_facebook_canvas_app.context.class%">
-            <argument type="service" id="fza_facebook_canvas_app.session" />
-            <argument type="service" id="fza_facebook_canvas_app.api" />
+        <service id="fza_facebook.context" class="%fza_facebook.context.class%">
+            <argument type="service" id="fza_facebook.session" />
+            <argument type="service" id="fza_facebook.api" />
             <argument type="collection"></argument> <!-- config -->
         </service>
 
-        <service id="fza_facebook_canvas_app.api" class="%fza_facebook_canvas_app.api.class%">
-            <file>%kernel.root_dir%/../vendor/facebook/src/base_facebook.php</file>
+        <service id="fza_facebook.api" class="%fza_facebook.api.class%">
+            <file>%fza_facebook.facebookbase.file%</file>
             <argument type="collection"></argument> <!-- config -->
-            <argument type="service" id="fza_facebook_canvas_app.session" />
+            <argument type="service" id="fza_facebook.session" />
             <argument></argument> <!-- session data prefix -->
         </service>
 
-        <service id="fza_facebook_canvas_app.session" class="%fza_facebook_canvas_app.session.class%">
-            <argument type="service" id="fza_facebook_canvas_app.session.storage" />
+        <service id="fza_facebook.session" class="%fza_facebook.session.class%">
+            <argument type="service" id="fza_facebook.session.storage" />
         </service>
 
-        <service id="fza_facebook_canvas_app.session.storage.doctrine" class="%fza_facebook_canvas_app.session.storage.doctrine.class%">
-            <argument type="service" id="fza_facebook_canvas_app.session.storage.doctrine.entity_manager"></argument>
+        <service id="fza_facebook.session.storage.doctrine" class="%fza_facebook.session.storage.doctrine.class%">
+            <argument type="service" id="fza_facebook.session.storage.doctrine.entity_manager"></argument>
             <argument></argument> <!-- session GC probability -->
             <argument></argument> <!-- session lifetime -->
         </service>
 
-        <service id="fza_facebook_canvas_app.check.chainhandler" class="%fza_facebook_canvas_app.check.chainhandler.class%">
+        <service id="fza_facebook.check.chainhandler" class="%fza_facebook.check.chainhandler.class%">
             <argument type="collection"></argument> <!-- chain config -->
             <argument type="service" id="service_container" />
         </service>
 
-        <service id="fza_facebook_canvas_app.check.handler.abstract" class="%fza_facebook_canvas_app.check.handler.abstract.class%" abstract="true">
+        <service id="fza_facebook.check.handler.abstract" class="%fza_facebook.check.handler.abstract.class%" abstract="true">
             <tag name="monolog.logger" channel="facebook" />
             <call method="setContainer">
                 <argument type="service" id="service_container" />
@@ -70,27 +70,27 @@
             </call>
         </service>
 
-        <service id="fza_facebook_canvas_app.check.handler.facebook_error" class="%fza_facebook_canvas_app.check.handler.facebook_error.class%" parent="fza_facebook_canvas_app.check.handler.abstract"></service>
-        <service id="fza_facebook_canvas_app.check.handler.no_signed_request" class="%fza_facebook_canvas_app.check.handler.no_signed_request.class%" parent="fza_facebook_canvas_app.check.handler.abstract"></service>
-        <service id="fza_facebook_canvas_app.check.handler.not_authenticated" class="%fza_facebook_canvas_app.check.handler.not_authenticated.class%" parent="fza_facebook_canvas_app.check.handler.abstract">
+        <service id="fza_facebook.check.handler.facebook_error" class="%fza_facebook.check.handler.facebook_error.class%" parent="fza_facebook.check.handler.abstract"></service>
+        <service id="fza_facebook.check.handler.no_signed_request" class="%fza_facebook.check.handler.no_signed_request.class%" parent="fza_facebook.check.handler.abstract"></service>
+        <service id="fza_facebook.check.handler.not_authenticated" class="%fza_facebook.check.handler.not_authenticated.class%" parent="fza_facebook.check.handler.abstract">
             <argument></argument> <!-- authentication redirect path -->
             <argument></argument> <!-- facebook permissions -->
         </service>
-        <service id="fza_facebook_canvas_app.check.handler.page_not_liked" class="%fza_facebook_canvas_app.check.handler.page_not_liked.class%" parent="fza_facebook_canvas_app.check.handler.abstract">
+        <service id="fza_facebook.check.handler.page_not_liked" class="%fza_facebook.check.handler.page_not_liked.class%" parent="fza_facebook.check.handler.abstract">
             <argument></argument> <!-- forward controller -->
         </service>
-        <service id="fza_facebook_canvas_app.check.handler.showdown_date_passed" class="%fza_facebook_canvas_app.check.handler.showdown_date_passed.class%" parent="fza_facebook_canvas_app.check.handler.abstract">
+        <service id="fza_facebook.check.handler.showdown_date_passed" class="%fza_facebook.check.handler.showdown_date_passed.class%" parent="fza_facebook.check.handler.abstract">
             <argument></argument> <!-- forward controller -->
         </service>
 
-        <service id="twig.extension.fza_facebook_canvas_app" class="%twig.extension.fza_facebook_canvas_app.class%" public="false">
+        <service id="twig.extension.fza_facebook" class="%twig.extension.fza_facebook.class%" public="false">
             <tag name="twig.extension" />
             <argument type="service" id="service_container" />
         </service>
 
-        <service id="facebook.api" alias="fza_facebook_canvas_app.api" />
-        <service id="facebook.session" alias="fza_facebook_canvas_app.session" />
-        <service id="facebook.context" alias="fza_facebook_canvas_app.context" />
+        <service id="facebook.api" alias="fza_facebook.api" />
+        <service id="facebook.session" alias="fza_facebook.session" />
+        <service id="facebook.context" alias="fza_facebook.context" />
         <service id="facebook.user" scope="request" synthetic="true" />
     </services>
 </container>
