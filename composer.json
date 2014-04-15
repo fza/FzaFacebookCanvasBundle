@@ -1,0 +1,35 @@
+{
+  "name": "fza/facebook-canvas-bundle",
+  "type": "symfony-bundle",
+  "description": "Rapid development of facebook canvas apps",
+  "keywords": ["facebook"],
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Felix Zandanel",
+      "email": "felix@zandanel.me",
+      "homepage": "http://felix.zandanel.me/"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.3",
+    "doctrine/orm": "~2.4",
+    "facebook/php-sdk": "3.2.*",
+    "symfony/dependency-injection": "~2.4",
+    "symfony/framework-bundle": "~2.4",
+    "symfony/http-foundation": "~2.4",
+    "symfony/http-kernel": "~2.4",
+    "symfony/twig-bundle": "~2.4",
+    "psr/log": "~1.0"
+  },
+  "require-dev": {},
+  "config": {
+    "bin-dir": "bin"
+  },
+  "autoload": {
+    "psr-0": {
+      "FOS\\FacebookBundle": ""
+    }
+  },
+  "target-dir": "Fza/FacebookCanvasAppBundle"
+}

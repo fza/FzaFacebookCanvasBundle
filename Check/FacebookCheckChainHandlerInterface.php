@@ -8,5 +8,10 @@ interface FacebookCheckChainHandlerInterface
 {
     const CHECK_PARAMETER_KEY = '_fb_check';
 
-    public function handle( GetResponseEvent $event );
+    /**
+     * @param GetResponseEvent $event
+     *
+     * @return void
+     */
+    public function handle(GetResponseEvent $event);
 }

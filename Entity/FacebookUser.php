@@ -27,26 +27,41 @@ abstract class FacebookUser
      */
     private $created;
 
-    public function setId( $id )
+    /**
+     * @param int $id
+     */
+    public function setId($id)
     {
         $this->id = $id;
     }
 
+    /**
+     * @return null|int
+     */
     public function getId()
     {
         return $this->id;
     }
 
-    public function setAccessToken( $accessToken )
+    /**
+     * @param string $accessToken
+     */
+    public function setAccessToken($accessToken)
     {
         $this->accessToken = $accessToken;
     }
 
+    /**
+     * @return null|string
+     */
     public function getAccessToken()
     {
         return $this->accessToken;
     }
 
+    /**
+     * @return null|\DateTime
+     */
     public function getCreated()
     {
         return $this->created;
@@ -57,8 +72,7 @@ abstract class FacebookUser
      */
     public function setCreated()
     {
-        if( null === $this->created )
-        {
+        if (null === $this->created) {
             $this->created = new \DateTime();
         }
     }

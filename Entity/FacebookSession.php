@@ -32,31 +32,49 @@ class FacebookSession
      */
     private $updated;
 
-    public function setId( $id )
+    /**
+     * @param string $id
+     */
+    public function setId($id)
     {
         $this->id = $id;
     }
 
+    /**
+     * @return null|string
+     */
     public function getId()
     {
         return $this->id;
     }
 
-    public function setAccessToken( $accessToken )
+    /**
+     * @param string $accessToken
+     */
+    public function setAccessToken($accessToken)
     {
         $this->accessToken = $accessToken;
     }
 
+    /**
+     * @return null|string
+     */
     public function getAccessToken()
     {
         return $this->accessToken;
     }
 
-    public function setData( array $data )
+    /**
+     * @param array $data
+     */
+    public function setData(array $data)
     {
         $this->data = $data;
     }
 
+    /**
+     * @return array
+     */
     public function getData()
     {
         return $this->data;
@@ -67,6 +85,9 @@ class FacebookSession
         $this->updated = new \DateTime();
     }
 
+    /**
+     * @return null|\DateTime
+     */
     public function getLastUpdated()
     {
         return $this->updated;

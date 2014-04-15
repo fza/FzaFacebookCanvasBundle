@@ -4,11 +4,11 @@ namespace Fza\FacebookCanvasAppBundle\Facebook\SessionStorage;
 
 interface SessionStorageInterface
 {
-    function createSession( $accessToken );
+    function createSession($accessToken);
 
-    function loadByAccessToken( $accessToken );
+    function loadByAccessToken($accessToken);
 
-    function loadBySessionId( $sessionId );
+    function loadBySessionId($sessionId);
 
     function removeSession();
 
@@ -18,7 +18,7 @@ interface SessionStorageInterface
 
     function getAccessToken();
 
-    function read( $key );
+    function read($key);
 
-    function write( $key, $data );
+    function write($key, $data);
 }
