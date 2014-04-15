@@ -23,12 +23,9 @@
     "psr/log": "~1.0"
   },
   "require-dev": {},
-  "config": {
-    "bin-dir": "bin"
-  },
   "autoload": {
     "psr-0": {
-      "FOS\\FacebookBundle": ""
+      "Fza\\FacebookCanvasBundle": ""
     }
   },
   "target-dir": "Fza/FacebookCanvasAppBundle"
